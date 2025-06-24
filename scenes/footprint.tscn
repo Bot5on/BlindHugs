@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://crkbfbhkopuik"]
+
+[ext_resource type="Script" uid="uid://dt4wbylr5dfdy" path="res://scripts/footprint.gd" id="1_6jsn6"]
+[ext_resource type="Texture2D" uid="uid://da626b4lnfmyu" path="res://assets/Foot.png" id="2_420u8"]
+
+[node name="Footprint" type="Node2D"]
+script = ExtResource("1_6jsn6")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.001, 0.001)
+texture = ExtResource("2_420u8")

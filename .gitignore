@@ -1,0 +1,21 @@
+# Godot импортированные файлы
+.import/
+*.import
+
+# Системные/временные файлы
+*.tmp
+*.log
+
+# Экспортированные билды
+/export/
+*.exe
+*.apk
+*.zip
+*.pck
+
+# Godot project-specific (иногда создаётся скрытая папка)
+.godot/
+
+# OS/system
+.DS_Store
+Thumbs.db

@@ -1,0 +1,64 @@
+[gd_scene load_steps=7 format=3 uid="uid://plr10t343rbb"]
+
+[ext_resource type="Script" uid="uid://dhdkdnjttthcq" path="res://scripts/world.gd" id="1_4wyf3"]
+[ext_resource type="Script" uid="uid://dijmfud6xe7ca" path="res://scripts/echo_renderer.gd" id="1_nnsk1"]
+[ext_resource type="PackedScene" uid="uid://d0b42od2y4ky6" path="res://scenes/player.tscn" id="3_k0juu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4wyf3"]
+size = Vector2(1151.76, 3.46864)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_k0juu"]
+size = Vector2(1.99968, 648)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_71j4m"]
+size = Vector2(84.0111, 33.9726)
+
+[node name="World" type="Node2D"]
+rotation = 0.000326756
+script = ExtResource("1_4wyf3")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(575.868, -1.45291)
+shape = SubResource("RectangleShape2D_4wyf3")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(576.212, 648.812)
+shape = SubResource("RectangleShape2D_4wyf3")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-0.894291, 324.003)
+shape = SubResource("RectangleShape2D_k0juu")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1152.11, 323.624)
+shape = SubResource("RectangleShape2D_k0juu")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(176.056, 171.943)
+scale = Vector2(11.4058, 6.78741)
+polygon = PackedVector2Array(-8.50622, -9.27722, -1.75547, -10.1649, -1.05493, -14.5852, 5.95899, -14.7364, 5.78559, -4.71779, -8.41691, -0.87937, -8.14976, 20.3362, -15.5144, 20.4876, -15.5133, 25.7915, -7.79815, 25.0506, -7.88422, 33.3013, 17.4541, 35.35, 17.8937, 41.685, -1.7453, 42.1378, -2.09522, 46.1159, 18.6836, 46.2518, 18.5102, 55.9758, 31.3107, 56.4108, 31.3123, 64.514, 78.4809, 63.4568, 77.9528, 52.8492, 60.5054, 51.9748, 60.4184, 55.5108, 71.3776, 55.0628, 70.8529, 61.5457, 37.9749, 61.1217, 38.0607, 51.6925, 25.4356, 51.5521, 24.4674, 32.2522, 13.4204, 31.9636, 12.7144, 8.39091, 6.57735, 9.13094, 6.31851, 30.6415, -0.958489, 30.4982, -1.22718, 1.32665, 13.239, 0.876719, 13.1483, -14.8877, 31.0338, -14.8975, 30.9482, -4.14228, 45.3268, -4.44484, 45.4135, -9.60149, 38.1364, -10.0395, 37.521, -18.5844, -8.5957, -18.5591)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(661.11, 336.784)
+scale = Vector2(85.2427, 52.9136)
+polygon = PackedVector2Array(-3.28562, -4.32609, -2.42924, -4.34543, -2.38169, -1.26496, -1.45492, -1.24655, -1.52565, -2.9285, 1.28984, -2.92999, 1.26647, -2.4764, -0.551869, -2.47545, -0.563458, -1.77619, 1.99394, -1.83423, 1.97034, -2.49567, 2.80325, -2.51501, 2.79204, 0.0363269, 1.20833, 0.0938568, 1.16152, 0.623046, 0.481083, 0.510012, 0.527835, -0.340456, 1.91208, -0.549071, 1.93541, -1.19164, -0.657185, -1.17138, -0.51574, 2.13583, 0.305453, 2.1732, 0.352216, 1.37942, 1.19686, 1.37898, 1.19702, 2.15383, 5.76047, 2.17032, 5.74886, 2.79399, 1.22062, 2.81527, 1.23262, 4.13818, 0.305848, 4.11977, 0.270378, 2.75907, -1.44238, 2.74108, -1.4783, -0.811869, -2.33466, -0.716924, -2.27585, 0.0200958, -3.22614, -0.300683)
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(41.1523, 465.987)
+shape = SubResource("RectangleShape2D_71j4m")
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(975.151, 224.053)
+scale = Vector2(4.52696, 2.79571)
+polygon = PackedVector2Array(-28.9437, 56.3975, -29.1629, 64.6246, 22.5273, 63.8818, 21.1884, -3.00571, 4.40016, -2.63913, 5.51643, 55.6639)
+
+[node name="EchoRenderer" type="Node2D" parent="."]
+script = ExtResource("1_nnsk1")
+
+[node name="Player" parent="." instance=ExtResource("3_k0juu")]
+position = Vector2(156.192, 587.949)
+
+[node name="Player2" parent="." instance=ExtResource("3_k0juu")]
+position = Vector2(990.023, 69.6765)

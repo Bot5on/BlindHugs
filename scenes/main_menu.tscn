@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1xan8orjyx0x"]
+
+[ext_resource type="Script" uid="uid://csi0ym3ii6ydx" path="res://scripts/main_menu.gd" id="1_ekxnf"]
+[ext_resource type="FontFile" uid="uid://bwymc7434hq8m" path="res://assets/PressStart2P-Regular.ttf" id="1_l6cm7"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+script = ExtResource("1_ekxnf")
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 2
+offset_left = 408.0
+offset_top = 329.0
+offset_right = 747.0
+offset_bottom = 429.0
+theme_override_fonts/font = ExtResource("1_l6cm7")
+text = "Начать игру"
+
+[node name="ExitButton" type="Button" parent="."]
+layout_mode = 2
+offset_left = 408.0
+offset_top = 448.0
+offset_right = 747.0
+offset_bottom = 517.0
+theme_override_fonts/font = ExtResource("1_l6cm7")
+text = "Выход"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 152.0
+offset_top = 143.0
+offset_right = 992.0
+offset_bottom = 267.0
+theme_override_fonts/normal_font = ExtResource("1_l6cm7")
+theme_override_font_sizes/normal_font_size = 91
+bbcode_enabled = true
+text = "[wave]BlindHugs[/wave]"
