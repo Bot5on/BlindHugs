@@ -24,8 +24,11 @@ func _physics_process(delta: float):
 	else:
 		direction = Input.get_vector("p2_left", "p2_right", "p2_up", "p2_down")
 
-	# Двигаем персонажа
-	velocity = direction.normalized() * speed
+	# Двигаем персонажа - проверяем направление перед нормализацией
+	if direction.length() > 0:
+		velocity = direction.normalized() * speed
+	else:
+		velocity = Vector2.ZERO
 	move_and_slide()
 
 	# Если персонаж движется и прошло достаточно времени с последнего шага

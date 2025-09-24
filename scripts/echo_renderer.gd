@@ -12,6 +12,7 @@ const WAVE_POINTS: int = 100            # Количество точек для
 # Константы для настройки следов
 const FOOTSTEP_LIFETIME: float = 1.2    # Время отображения следа на экране
 const FOOTSTEP_SPRITE_SCALE: float = 0.03 # Коэффициент масштабирования спрайта следа
+const MAX_FOOTPRINTS: int = 50          # Максимальное количество активных следов для предотвращения утечек памяти
 
 # Константы для визуальных эффектов
 const FADE_SMOOTHING: float = 5.0       # Плавность затухания альфа-канала
@@ -33,9 +34,14 @@ var effects: Array[WaveEffect] = []
 
 # Массив тел игроков для исключения из физических запросов
 var player_bodies: Array = []
+# Кэшированные RID для оптимизации производительности
+var player_rids: Array = []
 
 # Переключатель для чередования левой и правой ноги при создании следов
 var is_left_foot_next: bool = true
+
+# Счетчик активных следов для контроля памяти
+var active_footprints: int = 0
 
 # Создание нового эффекта волны и следа
 # pos - позиция создания эффекта
@@ -77,9 +83,27 @@ func _draw():
 # color - цвет следа
 # direction - направление для поворота спрайта
 func _create_footprint_sprite(pos: Vector2, color: Color, direction: Vector2):
+	# Проверяем лимит активных следов для предотвращения утечек памяти
+	if active_footprints >= MAX_FOOTPRINTS:
+		# Удаляем самый старый след
+		var oldest_footprint = null
+		var oldest_time = INF
+		for child in get_children():
+			if child.has_method("setup") and child.life_remaining < oldest_time:
+				oldest_time = child.life_remaining
+				oldest_footprint = child
+		
+		if oldest_footprint:
+			oldest_footprint.queue_free()
+			active_footprints -= 1
+	
 	# Создаем экземпляр сцены следа
 	var footprint = FootprintScene.instantiate()
 	add_child(footprint)
+	active_footprints += 1
+	
+	# Подключаем сигнал для отслеживания удаления следа
+	footprint.tree_exiting.connect(_on_footprint_removed)
 	
 	# Устанавливаем позицию следа
 	footprint.global_position = pos
@@ -100,6 +124,10 @@ func _create_footprint_sprite(pos: Vector2, color: Color, direction: Vector2):
 	
 	# Переключаем ногу для следующего шага
 	is_left_foot_next = not is_left_foot_next
+
+# Обработчик удаления следа для корректного подсчета
+func _on_footprint_removed():
+	active_footprints = max(0, active_footprints - 1)
 
 # Отрисовка отдельной расширяющейся волны
 # effect - данные волнового эффекта
@@ -135,28 +163,37 @@ func _draw_wave(effect: WaveEffect):
 # color - цвет линии
 # width - толщина линии
 func _draw_wave_polyline(center: Vector2, radius: float, color: Color, width: float):
+	# Оптимизация: уменьшаем количество точек для больших радиусов
+	var adaptive_points = max(24, min(WAVE_POINTS, int(radius / 3)))
 	var points = PackedVector2Array()
+	
+	# Кэшируем space_state для избежания повторных вызовов
 	var space_state = get_world_2d().direct_space_state
 	
-	# Создаем точки окружности с проверкой коллизий
-	for i in range(WAVE_POINTS + 1):
+	# Создаем точки окружности с оптимизированной проверкой коллизий
+	for i in range(adaptive_points + 1):
 		# Вычисляем угол текущей точки
-		var angle: float = i * TAU / WAVE_POINTS
+		var angle: float = i * TAU / adaptive_points
 		var direction: Vector2 = Vector2.from_angle(angle)
 		var target_pos: Vector2 = center + direction * radius
 		
-		# Создаем луч от центра к целевой позиции
-		var query = PhysicsRayQueryParameters2D.create(center, target_pos)
-		
-		# Исключаем тела игроков из проверки коллизий
-		if not player_bodies.is_empty():
-			query.exclude = player_bodies.map(func(p): return p.get_rid())
-		
-		# Выполняем проверку пересечения луча с препятствиями
-		var result = space_state.intersect_ray(query)
-		
-		# Используем точку пересечения или целевую позицию, если препятствий нет
-		points.append(result.position if result else target_pos)
+		# Создаем луч от центра к целевой позиции только через определенные интервалы
+		# для уменьшения количества ray cast'ов
+		if i % 2 == 0:  # Проверяем коллизии только для каждой второй точки
+			var query = PhysicsRayQueryParameters2D.create(center, target_pos)
+			
+			# Исключаем тела игроков из проверки коллизий (используем кэшированные RID)
+			if not player_rids.is_empty():
+				query.exclude = player_rids
+			
+			# Выполняем проверку пересечения луча с препятствиями
+			var result = space_state.intersect_ray(query)
+			
+			# Используем точку пересечения или целевую позицию, если препятствий нет
+			points.append(result.position if result else target_pos)
+		else:
+			# Для промежуточных точек просто используем целевую позицию
+			points.append(target_pos)
 	
 	# Рисуем полилинию, если есть достаточно точек
 	if points.size() > 1:
@@ -166,3 +203,5 @@ func _draw_wave_polyline(center: Vector2, radius: float, color: Color, width: fl
 # players_array - массив тел игроков
 func set_players(players_array: Array):
 	player_bodies = players_array
+	# Кэшируем RID для оптимизации производительности
+	player_rids = player_bodies.map(func(p): return p.get_rid())
